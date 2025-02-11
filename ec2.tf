@@ -15,7 +15,7 @@ provider "aws" {
 
 
 resource "aws_instance" "myec2" {
-  ami             = "ami-0d71ca6a78e324f68" # CentOS 7
+  ami             = "ami-0aedf6b1cb669b4c7" # CentOS 7
   instance_type   = "t2.medium"              # you can change this
   key_name        = "your-public-key.pem"  # the name of your public key
   security_groups = ["minikube-sg"]
