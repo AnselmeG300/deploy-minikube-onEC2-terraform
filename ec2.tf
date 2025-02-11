@@ -34,13 +34,13 @@ resource "aws_instance" "myec2" {
 
   provisioner "remote-exec" {
     inline = [
-      sudo sed -i -e 's/mirror.centos.org/vault.centos.org/g' \
+      "sudo sed -i -e 's/mirror.centos.org/vault.centos.org/g' \
            -e 's/^#.*baseurl=http/baseurl=http/g' \
            -e 's/^mirrorlist=http/#mirrorlist=http/g' \
-           /etc/yum.repos.d/*.repo,
+           /etc/yum.repos.d/*.repo",
 
-      sudo yum update -y, 
-      sudo yum install curl unzip git wget -y,
+      "sudo yum update -y", 
+      "sudo yum install curl unzip git wget -y",
       
       "sudo curl -fsSL https://get.docker.com -o get-docker.sh",
       "sudo sh get-docker.sh",
