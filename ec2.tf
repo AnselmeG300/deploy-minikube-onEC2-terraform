@@ -18,7 +18,7 @@ resource "aws_instance" "myec2" {
   ami             = "ami-0aedf6b1cb669b4c7" # CentOS 7
   instance_type   = "t2.medium"              # you can change this
   key_name        = "your-public-key.pem"  # the name of your public key
-  security_groups = ["minikube-sg"]
+  security_groups = [aws_security_group.allow_http_https.name]
 
   root_block_device {
     volume_size = 100 # you can change this value
@@ -34,10 +34,7 @@ resource "aws_instance" "myec2" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i -e 's/mirror.centos.org/vault.centos.org/g' \
-           -e 's/^#.*baseurl=http/baseurl=http/g' \
-           -e 's/^mirrorlist=http/#mirrorlist=http/g' \
-           /etc/yum.repos.d/*.repo",
+      "sudo sed -i -e 's/mirror.centos.org/vault.centos.org/g' -e 's/^#.*baseurl=http/baseurl=http/g' -e 's/^mirrorlist=http/#mirrorlist=http/g' /etc/yum.repos.d/*.repo",
 
       "sudo yum update -y", 
       "sudo yum -y install epel-release",
@@ -73,7 +70,7 @@ resource "aws_instance" "myec2" {
 }
 
 resource "aws_security_group" "allow_http_https" {
-  name        = "franklin-sg"
+  name        = "minikube-sg"
   description = "Allow http and https inbound traffic"
 
   ingress {
