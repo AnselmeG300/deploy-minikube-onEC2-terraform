@@ -40,6 +40,7 @@ resource "aws_instance" "myec2" {
            /etc/yum.repos.d/*.repo",
 
       "sudo yum update -y", 
+      "sudo yum -y install epel-release",
       "sudo yum install curl unzip git wget -y",
       
       "sudo curl -fsSL https://get.docker.com -o get-docker.sh",
@@ -51,16 +52,19 @@ resource "aws_instance" "myec2" {
       "sudo yum -y install nano git libvirt qemu-kvm virt-install virt-top libguestfs-tools bridge-utils",
       "sudo yum install socat -y",
       "sudo yum install -y conntrack",
-      "sudo yum -y install wget",
+
       "sudo wget https://storage.googleapis.com/minikube/releases/v1.11.0/minikube-linux-amd64",
       "sudo chmod +x minikube-linux-amd64",
       "sudo mv minikube-linux-amd64 /usr/bin/minikube",
       "sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.0/bin/linux/amd64/kubectl",
       "sudo chmod +x kubectl",
       "sudo mv kubectl /usr/bin/",
+      "sudo su",
       "sudo echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables",
+      "exit",
       "sudo systemctl enable docker.service",
-      "sudo systemctl start docker.service",
+      "exec sudo su -l $USER",
+      "minikube start –driver=docker --kubernetes-version=v1.28.3"
 
     ]
   }
