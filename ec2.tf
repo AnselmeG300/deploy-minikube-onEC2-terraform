@@ -46,8 +46,8 @@ resource "aws_instance" "myec2" {
       "sudo curl -fsSL https://get.docker.com -o get-docker.sh",
       "sudo sh get-docker.sh",
       "sudo usermod -aG docker centos",
-      "suudo systemctl start docker",
-      "suudo systemctl enable docker",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
 
       "sudo yum -y install nano git libvirt qemu-kvm virt-install virt-top libguestfs-tools bridge-utils",
       "sudo yum install socat -y",
