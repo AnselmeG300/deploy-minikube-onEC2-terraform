@@ -16,9 +16,9 @@ provider "aws" {
 
 resource "aws_instance" "myec2" {
   ami             = "ami-0d71ca6a78e324f68" # CentOS 7
-  instance_type   = "t3.large"              # you can change this
+  instance_type   = "t2.medium"              # you can change this
   key_name        = "your-public-key.pem"  # the name of your public key
-  security_groups = ["franklin-sg"]
+  security_groups = ["minikube-sg"]
 
   root_block_device {
     volume_size = 100 # you can change this value
@@ -34,16 +34,23 @@ resource "aws_instance" "myec2" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo yum update -y",
-      "sudo yum -y install epel-release",
-      "sudo yum -y install nano git libvirt qemu-kvm virt-install virt-top libguestfs-tools bridge-utils",
-      "sudo yum install socat -y",
-      "sudo yum install -y conntrack",
+      sudo sed -i -e 's/mirror.centos.org/vault.centos.org/g' \
+           -e 's/^#.*baseurl=http/baseurl=http/g' \
+           -e 's/^mirrorlist=http/#mirrorlist=http/g' \
+           /etc/yum.repos.d/*.repo,
+
+      sudo yum update -y, 
+      sudo yum install curl unzip git wget -y,
+      
       "sudo curl -fsSL https://get.docker.com -o get-docker.sh",
       "sudo sh get-docker.sh",
       "sudo usermod -aG docker centos",
       "suudo systemctl start docker",
       "suudo systemctl enable docker",
+
+      "sudo yum -y install nano git libvirt qemu-kvm virt-install virt-top libguestfs-tools bridge-utils",
+      "sudo yum install socat -y",
+      "sudo yum install -y conntrack",
       "sudo yum -y install wget",
       "sudo wget https://storage.googleapis.com/minikube/releases/v1.11.0/minikube-linux-amd64",
       "sudo chmod +x minikube-linux-amd64",
